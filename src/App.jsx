@@ -19,7 +19,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from "recharts";
 import {
-  Clock, Calendar as CalendarIcon, Settings as SettingsIcon, LayoutDashboard,
+  Clock, Calendar as CalendarIcon, Settings as SettingsIcon, LayoutDashboard, DollarSign,
   ChevronLeft, ChevronRight, X, Sun, Umbrella, Home, Star, Ban, Coffee,
 } from "lucide-react";
 
@@ -44,6 +44,157 @@ const keyOf = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
 const monthKey = (y, m) => `${y}-${pad(m + 1)}`;
 const inr = (n) => `₹${Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 const rnd = (n) => Math.round(n * 100) / 100;
+const UI_TEXT = {
+  en: {
+    dashboard: "Dashboard",
+    attendance: "Attendance",
+    salary: "Salary",
+    settings: "Settings",
+    appSubtitle: "ATTENDANCE & PAYROLL",
+    finalSalary: "Final Salary",
+    deduction: "Deduction",
+    overtime: "Overtime",
+    monthlySalaryStatus: "Monthly Salary Status",
+    salaryPaid: "Salary paid",
+    salaryNotPaid: "Salary not paid yet",
+    markPaid: "Mark Paid",
+    markUnpaid: "Mark Unpaid",
+    monthlySalary: "Monthly Salary",
+    salaryDeduction: "Salary Deduction",
+    overtimeEarnings: "Overtime Earnings",
+    presentDays: "Present Days",
+    halfDays: "Half Days",
+    unpaidLeaves: "Unpaid Leaves",
+    paidLeaves: "Paid Leaves",
+    govtHolidays: "Govt. Holidays",
+    salaryTrend: "Salary Trend",
+    thisMonthsMix: "This Month's Mix",
+    attendanceLeaveTrend: "Attendance & Leave Trend",
+    overtimeDeductionTrend: "Overtime & Deduction Trend",
+    present: "Present",
+    leave: "Leave",
+    halfDay: "Half Day",
+    amountWeGet: "Amount We Get",
+    totalPaidSalary: "Total Paid Salary",
+    totalUnpaidSalary: "Total Unpaid Salary",
+    monthWiseSalaryList: "Month-wise Salary List",
+    monthRowSubtitle: "Each month shows salary, deductions, attendance, and a paid/unpaid toggle.",
+    paid: "Paid",
+    unpaid: "Unpaid",
+    workingDays: "Working Days",
+    status: "Status",
+    checkIn: "Check-in",
+    checkOut: "Check-out",
+    overtimeHours: "Overtime Hours",
+    reason: "Reason",
+    remarks: "Remarks",
+    deductionLabel: "Deduction",
+    offSunday: "Off (Sunday)",
+    appNameTitle: "App Name",
+    websiteName: "Website Name",
+    salaryTitle: "Salary",
+    fixedMonthlySalary: "Fixed Monthly Salary (₹)",
+    salaryCalculationMethod: "Salary Calculation Method",
+    actualWorkingDays: "Actual working days in month",
+    fixed30Days: "Fixed 30-day month",
+    workingSchedule: "Working Schedule",
+    saturdaysWorking: "Saturdays are working days",
+    workingHoursPerDay: "Working Hours per Day",
+    halfDayRule: "Half Day Rule",
+    halfDayDeduction: "Half Day Deduction (%) — currently",
+    defaultHalfDay: "Default is 50% of daily salary.",
+    overtimeRate: "Overtime Rate",
+    overtimeMultiplier: "Overtime Multiplier",
+    dataStorage: "Data & Storage",
+    storageText: "Attendance records and settings are saved to this browser's local storage, so they'll still be here next time you open the app on this device. They aren't synced anywhere else.",
+    resetAllData: "Reset all attendance data",
+    languageSettings: "Language",
+    hindiToggleLabel: "Show website in Hindi",
+    appNameNote: "This name will appear in the header and browser tab.",
+  },
+  hi: {
+    dashboard: "डैशबोर्ड",
+    attendance: "उपस्थिति",
+    salary: "वेतन",
+    settings: "सेटिंग्स",
+    appSubtitle: "उपस्थिति और वेतन",
+    finalSalary: "अंतिम वेतन",
+    deduction: "कटौती",
+    overtime: "ओवरटाइम",
+    monthlySalaryStatus: "मासिक वेतन स्थिति",
+    salaryPaid: "वेतन दिया गया",
+    salaryNotPaid: "वेतन अभी तक नहीं दिया गया",
+    markPaid: "भुगतान किया",
+    markUnpaid: "अभुगतान किया",
+    monthlySalary: "मासिक वेतन",
+    salaryDeduction: "वेतन कटौती",
+    overtimeEarnings: "ओवरटाइम कमाई",
+    presentDays: "उपस्थित दिन",
+    halfDays: "आधे दिन",
+    unpaidLeaves: "बिना भुगतान छुट्टियाँ",
+    paidLeaves: "भुगतान वाली छुट्टियाँ",
+    govtHolidays: "सरकारी अवकाश",
+    salaryTrend: "वेतन रुझान",
+    thisMonthsMix: "इस महीने का मिश्रण",
+    attendanceLeaveTrend: "उपस्थिति और छुट्टी रुझान",
+    overtimeDeductionTrend: "ओवरटाइम और कटौती रुझान",
+    present: "उपस्थित",
+    leave: "छुट्टी",
+    halfDay: "आधा दिन",
+    amountWeGet: "हम जो प्राप्त करते हैं",
+    totalPaidSalary: "कुल भुगतान किया गया वेतन",
+    totalUnpaidSalary: "कुल अप्रदत्त वेतन",
+    monthWiseSalaryList: "मासिक वेतन सूची",
+    monthRowSubtitle: "प्रत्येक महीने में वेतन, कटौती, उपस्थिति और भुगतान/अप्रदत्त विकल्प दिखाए जाते हैं।",
+    paid: "भुगतान किया",
+    unpaid: "अभुगतान",
+    workingDays: "कार्य दिवस",
+    status: "स्थिति",
+    checkIn: "चेक-इन",
+    checkOut: "चेक-आउट",
+    overtimeHours: "ओवरटाइम घंटे",
+    reason: "कारण",
+    remarks: "टिप्पणियाँ",
+    deductionLabel: "कटौती",
+    offSunday: "रविवार की छुट्टी",
+    appNameTitle: "ऐप का नाम",
+    websiteName: "वेबसाइट का नाम",
+    salaryTitle: "वेतन",
+    fixedMonthlySalary: "निश्चित मासिक वेतन (₹)",
+    salaryCalculationMethod: "वेतन गणना विधि",
+    actualWorkingDays: "मास के वास्तविक कार्य दिवस",
+    fixed30Days: "निश्चित 30-दिवसीय माह",
+    workingSchedule: "कार्य अनुसूची",
+    saturdaysWorking: "शनिवार कार्य दिवस हैं",
+    workingHoursPerDay: "प्रति दिन कार्य घंटे",
+    halfDayRule: "आधा दिन नियम",
+    halfDayDeduction: "आधा दिन कटौती (%) — वर्तमान",
+    defaultHalfDay: "डिफ़ॉल्ट दैनिक वेतन का 50% है।",
+    overtimeRate: "ओवरटाइम दर",
+    overtimeMultiplier: "ओवरटाइम गुणक",
+    dataStorage: "डेटा और संग्रहण",
+    storageText: "उपस्थिति रिकॉर्ड और सेटिंग्स इस ब्राउज़र की स्थानीय संग्रहण में सहेजे जाते हैं, इसलिए वे इस डिवाइस पर फिर से खोलने पर फिर से दिखाई देंगे। वे कहीं और सिंक नहीं होते।",
+    resetAllData: "सभी उपस्थिति डेटा रीसेट करें",
+    languageSettings: "भाषा",
+    hindiToggleLabel: "वेबसाइट हिंदी में दिखाएँ",
+    appNameNote: "यह नाम हेडर और ब्राउज़र टैब में दिखाई देगा।",
+  },
+};
+const getUiText = (language, key) => (language === "hi" ? UI_TEXT.hi[key] ?? UI_TEXT.en[key] : UI_TEXT.en[key]);
+const getStatusLabel = (status, language) => {
+  if (language === "hi") {
+    const map = { present: "उपस्थित", half: "आधा दिन", leave: "पूरा दिन की छुट्टी", paid: "भुगतान वाली छुट्टी", unpaid: "बिना भुगतान वाली छुट्टी", sunday: "रविवार", holiday: "सरकारी अवकाश", wfh: "घर से काम" };
+    return map[status] || STATUS[status].label;
+  }
+  return STATUS[status].label;
+};
+const getDefaultStatus = (y, m, d, rec, settings) => {
+  if (rec?.status) return rec.status;
+  const dow = new Date(y, m, d).getDay();
+  if (dow === 0) return "sunday";
+  if (dow === 6 && !settings.saturdayWorking) return "sunday";
+  return "present";
+};
 
 /* ---------------------------------------------------------------
    FONT / GLOBAL STYLE
@@ -126,13 +277,16 @@ export default function PunchSalaryApp() {
   const [selectedDay, setSelectedDay] = useState(null);
 
   const [settings, setSettings] = useState(() => loadFromStorage(LS_SETTINGS_KEY, {
-    monthlySalary: 45000,
+    appName: "Shinu",
+    monthlySalary: 5000,
     workingDaysPerWeek: 6,
     saturdayWorking: true,
     workingHoursPerDay: 8,
     halfDayPercent: 50,
     overtimeMultiplier: 1.5,
     calcMethod: "calendar", // calendar | fixed30 | actualWorking
+    salaryPaidMonths: {},
+    language: "en",
   }));
 
   // persist to localStorage whenever data changes
@@ -177,13 +331,7 @@ export default function PunchSalaryApp() {
     for (let d = 1; d <= dim; d++) {
       const k = keyOf(viewYear, viewMonth, d);
       const rec = records[k];
-      const dow = new Date(viewYear, viewMonth, d).getDay();
-      let status = rec?.status;
-      if (!status) {
-        // auto-detect sundays / non-working saturdays if untouched
-        if (dow === 0) status = "sunday";
-        else if (dow === 6 && !settings.saturdayWorking) status = "sunday";
-      }
+      const status = getDefaultStatus(viewYear, viewMonth, d, rec, settings);
       if (status && counts[status] !== undefined) counts[status]++;
 
       if (status === "half") deduction += halfDaySalary;
@@ -220,17 +368,18 @@ export default function PunchSalaryApp() {
       const hSal = dSal / (settings.workingHoursPerDay || 8);
       for (let d = 1; d <= dim; d++) {
         const rec = records[keyOf(y, m - 1, d)];
-        if (!rec) continue;
-        if (rec.status === "present") present++;
-        if (rec.status === "half") { half++; ded += dSal * (settings.halfDayPercent / 100); }
-        if (rec.status === "leave") { leave++; ded += dSal; }
-        if (rec.status === "unpaid") { unpaid++; ded += dSal; }
-        if (rec.status === "paid") paidL++;
-        if (rec.overtimeHours) { ot += Number(rec.overtimeHours); otBonus += Number(rec.overtimeHours) * hSal * settings.overtimeMultiplier; }
+        const status = getDefaultStatus(y, m - 1, d, rec, settings);
+        if (status === "present") present++;
+        if (status === "half") { half++; ded += dSal * (settings.halfDayPercent / 100); }
+        if (status === "leave") { leave++; ded += dSal; }
+        if (status === "unpaid") { unpaid++; ded += dSal; }
+        if (status === "paid") paidL++;
+        if (rec?.overtimeHours) { ot += Number(rec.overtimeHours); otBonus += Number(rec.overtimeHours) * hSal * settings.overtimeMultiplier; }
       }
       const finalSal = settings.monthlySalary - ded + otBonus;
       return {
         month: `${MONTHS[m - 1].slice(0, 3)} ${String(y).slice(2)}`,
+        monthKey: `${y}-${pad(m)}`,
         salary: rnd(finalSal), present, half, leave: leave + unpaid, overtime: rnd(ot), deduction: rnd(ded),
       };
     });
@@ -247,11 +396,12 @@ export default function PunchSalaryApp() {
     <div className="punch-root" style={{ width: "100%" }}>
       <GlobalStyle />
       <div style={{ maxWidth: 1180, margin: "0 auto", padding: "28px 20px 60px" }}>
-        <Header tab={tab} setTab={setTab} />
+        <Header tab={tab} setTab={setTab} appName={settings.appName || "PUNCH."} language={settings.language} />
         {tab === "dashboard" && (
           <Dashboard
             settings={settings} summary={summary} trendData={trendData} pieData={pieData}
             viewYear={viewYear} viewMonth={viewMonth}
+            setSettings={setSettings}
           />
         )}
         {tab === "attendance" && (
@@ -260,6 +410,14 @@ export default function PunchSalaryApp() {
             records={records} isWorkingDay={isWorkingDay} daysInMonth={daysInMonth}
             selectedDay={selectedDay} setSelectedDay={setSelectedDay} updateDay={updateDay}
             settings={settings} summary={summary} dailySalary={dailySalary} halfDaySalary={halfDaySalary}
+          />
+        )}
+        {tab === "salary" && (
+          <SalaryPage
+            settings={settings} summary={summary}
+            setSettings={setSettings}
+            viewYear={viewYear} viewMonth={viewMonth}
+            trendData={trendData}
           />
         )}
         {tab === "settings" && <SettingsPage settings={settings} setSettings={setSettings} setRecords={setRecords} />}
@@ -271,11 +429,13 @@ export default function PunchSalaryApp() {
 /* ---------------------------------------------------------------
    HEADER / NAV
 ---------------------------------------------------------------- */
-function Header({ tab, setTab }) {
+function Header({ tab, setTab, appName, language }) {
+  const ui = language === "hi" ? UI_TEXT.hi : UI_TEXT.en;
   const tabs = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "attendance", label: "Attendance", icon: CalendarIcon },
-    { id: "settings", label: "Settings", icon: SettingsIcon },
+    { id: "dashboard", label: ui.dashboard, icon: LayoutDashboard },
+    { id: "attendance", label: ui.attendance, icon: CalendarIcon },
+    { id: "salary", label: ui.salary, icon: DollarSign },
+    { id: "settings", label: ui.settings, icon: SettingsIcon },
   ];
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
@@ -287,8 +447,8 @@ function Header({ tab, setTab }) {
           <Clock size={20} color="#10131A" strokeWidth={2.5} />
         </div>
         <div>
-          <div className="disp" style={{ fontSize: 19, fontWeight: 700, letterSpacing: .3 }}>PUNCH.</div>
-          <div className="mono" style={{ fontSize: 10.5, color: "var(--ink-dim)", letterSpacing: 1.5 }}>ATTENDANCE &amp; PAYROLL</div>
+          <div className="disp" style={{ fontSize: 19, fontWeight: 700, letterSpacing: .3 }}>{appName}</div>
+          <div className="mono" style={{ fontSize: 10.5, color: "var(--ink-dim)", letterSpacing: 1.5 }}>{ui.appSubtitle}</div>
         </div>
       </div>
       <div style={{ display: "flex", gap: 6, background: "var(--surface)", padding: 5, borderRadius: 12, border: "1px solid var(--border)" }}>
@@ -326,7 +486,21 @@ function KpiTicket({ label, value, sub, color }) {
   );
 }
 
-function Dashboard({ settings, summary, trendData, pieData, viewYear, viewMonth }) {
+function Dashboard({ settings, summary, trendData, pieData, viewYear, viewMonth, setSettings }) {
+  const ui = settings.language === "hi" ? UI_TEXT.hi : UI_TEXT.en;
+  const monthKeyValue = monthKey(viewYear, viewMonth);
+  const isSalaryPaid = Boolean(settings.salaryPaidMonths?.[monthKeyValue]);
+
+  const toggleSalaryPaid = (paid) => {
+    setSettings((prev) => ({
+      ...prev,
+      salaryPaidMonths: {
+        ...(prev.salaryPaidMonths || {}),
+        [monthKeyValue]: paid,
+      },
+    }));
+  };
+
   return (
     <div className="fade-in">
       {/* LED readout */}
@@ -336,32 +510,33 @@ function Dashboard({ settings, summary, trendData, pieData, viewYear, viewMonth 
       }}>
         <div>
           <div className="mono" style={{ fontSize: 11, color: "var(--ink-dim)", letterSpacing: 1.5, marginBottom: 6 }}>
-            {MONTHS[viewMonth].toUpperCase()} {viewYear} · FINAL SALARY
+            {MONTHS[viewMonth].toUpperCase()} {viewYear} · {ui.finalSalary.toUpperCase()}
           </div>
           <div className="mono led led-num" style={{ fontWeight: 600, color: "#4ED9C5" }}>{inr(summary.finalSalary)}</div>
         </div>
         <div style={{ display: "flex", gap: 22, flexWrap: "wrap" }}>
-          <MiniStat label="Deduction" value={`-${inr(summary.deduction)}`} color="#F2677A" />
-          <MiniStat label="Overtime" value={`+${inr(summary.overtimeBonus)}`} color="#F2A93B" />
-          <MiniStat label="Attendance" value={`${rnd(summary.attendancePct)}%`} color="#4ED9C5" />
+          <MiniStat label={ui.deduction} value={`-${inr(summary.deduction)}`} color="#F2677A" />
+          <MiniStat label={ui.overtime} value={`+${inr(summary.overtimeBonus)}`} color="#F2A93B" />
+          <MiniStat label={ui.attendance} value={`${rnd(summary.attendancePct)}%`} color="#4ED9C5" />
         </div>
       </div>
 
+
       {/* KPI grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12, marginBottom: 22 }}>
-        <KpiTicket label="Monthly Salary" value={inr(settings.monthlySalary)} />
-        <KpiTicket label="Salary Deduction" value={inr(summary.deduction)} color="#F2677A" />
-        <KpiTicket label="Overtime Earnings" value={inr(summary.overtimeBonus)} color="#F2A93B" />
-        <KpiTicket label="Present Days" value={summary.counts.present} color="#4ED9C5" />
-        <KpiTicket label="Half Days" value={summary.counts.half} color="#F2A93B" />
-        <KpiTicket label="Unpaid Leaves" value={summary.counts.unpaid} color="#E14C63" />
-        <KpiTicket label="Paid Leaves" value={summary.counts.paid} color="#8FD19E" />
-        <KpiTicket label="Govt. Holidays" value={summary.counts.holiday} color="#A99BFF" />
+        <KpiTicket label={ui.monthlySalary} value={inr(settings.monthlySalary)} />
+        <KpiTicket label={ui.salaryDeduction} value={inr(summary.deduction)} color="#F2677A" />
+        <KpiTicket label={ui.overtimeEarnings} value={inr(summary.overtimeBonus)} color="#F2A93B" />
+        <KpiTicket label={ui.presentDays} value={summary.counts.present} color="#4ED9C5" />
+        <KpiTicket label={ui.halfDays} value={summary.counts.half} color="#F2A93B" />
+        <KpiTicket label={ui.unpaidLeaves} value={summary.counts.unpaid} color="#E14C63" />
+        <KpiTicket label={ui.paidLeaves} value={summary.counts.paid} color="#8FD19E" />
+        <KpiTicket label={ui.govtHolidays} value={summary.counts.holiday} color="#A99BFF" />
       </div>
 
       {/* charts */}
       <div className="grid-dash-main">
-        <ChartCard title="Salary Trend">
+        <ChartCard title={ui.salaryTrend}>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={trendData} margin={{ top: 6, right: 10, left: -18, bottom: 0 }}>
               <CartesianGrid stroke="rgba(255,255,255,.06)" vertical={false} />
@@ -372,7 +547,7 @@ function Dashboard({ settings, summary, trendData, pieData, viewYear, viewMonth 
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title="This Month's Mix">
+        <ChartCard title={ui.thisMonthsMix}>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={78} paddingAngle={2}>
@@ -385,7 +560,7 @@ function Dashboard({ settings, summary, trendData, pieData, viewYear, viewMonth 
       </div>
 
       <div className="grid-dash-sec">
-        <ChartCard title="Attendance & Leave Trend">
+        <ChartCard title={ui.attendanceLeaveTrend}>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={trendData} margin={{ top: 6, right: 10, left: -18, bottom: 0 }}>
               <CartesianGrid stroke="rgba(255,255,255,.06)" vertical={false} />
@@ -393,13 +568,13 @@ function Dashboard({ settings, summary, trendData, pieData, viewYear, viewMonth 
               <YAxis stroke="#8B93A7" fontSize={11} tickLine={false} axisLine={false} />
               <Tooltip contentStyle={{ background: "#1A1F29", border: "1px solid rgba(255,255,255,.1)", borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="present" name="Present" fill="#4ED9C5" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="leave" name="Leave" fill="#F2677A" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="half" name="Half Day" fill="#F2A93B" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="present" name={ui.present} fill="#4ED9C5" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="leave" name={ui.leave} fill="#F2677A" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="half" name={ui.halfDay} fill="#F2A93B" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title="Overtime & Deduction Trend">
+        <ChartCard title={ui.overtimeDeductionTrend}>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={trendData} margin={{ top: 6, right: 10, left: -18, bottom: 0 }}>
               <CartesianGrid stroke="rgba(255,255,255,.06)" vertical={false} />
@@ -407,8 +582,8 @@ function Dashboard({ settings, summary, trendData, pieData, viewYear, viewMonth 
               <YAxis stroke="#8B93A7" fontSize={11} tickLine={false} axisLine={false} />
               <Tooltip contentStyle={{ background: "#1A1F29", border: "1px solid rgba(255,255,255,.1)", borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Line type="monotone" dataKey="overtime" name="OT Hours" stroke="#F2A93B" strokeWidth={2} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="deduction" name="Deduction ₹" stroke="#F2677A" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="overtime" name={ui.overtimeHours} stroke="#F2A93B" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="deduction" name={`${ui.deduction} ₹`} stroke="#F2677A" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -431,6 +606,95 @@ function ChartCard({ title, children }) {
     <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: "16px 16px 6px" }}>
       <div style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-dim)", marginBottom: 4, letterSpacing: .3 }}>{title}</div>
       {children}
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------
+   SALARY PAGE
+---------------------------------------------------------------- */
+function SalaryPage({ settings, summary, setSettings, viewYear, viewMonth, trendData }) {
+  const ui = settings.language === "hi" ? UI_TEXT.hi : UI_TEXT.en;
+  const monthRows = trendData?.length
+    ? trendData.map((item) => ({
+        month: item.month,
+        monthKey: item.monthKey,
+        salary: item.salary,
+        deduction: item.deduction,
+        present: item.present,
+        half: item.half,
+        leave: item.leave,
+      }))
+    : [{
+        month: `${MONTHS[viewMonth].slice(0, 3)} ${String(viewYear).slice(2)}`,
+        monthKey: monthKey(viewYear, viewMonth),
+        salary: summary.finalSalary,
+        deduction: summary.deduction,
+        present: summary.counts.present,
+        half: summary.counts.half,
+        leave: summary.counts.leave + summary.counts.unpaid,
+      }];
+
+  const togglePaid = (monthKeyValue, paid) => {
+    setSettings((prev) => ({
+      ...prev,
+      salaryPaidMonths: {
+        ...(prev.salaryPaidMonths || {}),
+        [monthKeyValue]: paid,
+      },
+    }));
+  };
+
+  const totalPaidSalary = monthRows.reduce((sum, item) => sum + (Boolean(settings.salaryPaidMonths?.[item.monthKey]) ? item.salary : 0), 0);
+  const totalUnpaidSalary = monthRows.reduce((sum, item) => sum + (!Boolean(settings.salaryPaidMonths?.[item.monthKey]) ? item.salary : 0), 0);
+
+  return (
+    <div className="fade-in" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: 20, boxShadow: "0 18px 45px rgba(0,0,0,.2)" }}>
+      <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 14, background: "linear-gradient(135deg, rgba(78,217,197,.16), rgba(127,209,232,.08))", border: "1px solid rgba(78,217,197,.16)" }}>
+        <div className="disp" style={{ fontSize: 18, fontWeight: 700 }}>{ui.monthWiseSalaryList}</div>
+        <div style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 4 }}>{ui.monthRowSubtitle}</div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10, marginBottom: 12 }}>
+        <div style={{ background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "12px 14px" }}>
+          <div style={{ fontSize: 11.5, color: "var(--ink-dim)", textTransform: "uppercase", letterSpacing: 0.6 }}>{ui.totalPaidSalary}</div>
+          <div className="disp mono" style={{ fontSize: 18, fontWeight: 700, color: "#4ED9C5", marginTop: 6 }}>{inr(totalPaidSalary)}</div>
+        </div>
+        <div style={{ background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "12px 14px" }}>
+          <div style={{ fontSize: 11.5, color: "var(--ink-dim)", textTransform: "uppercase", letterSpacing: 0.6 }}>{ui.totalUnpaidSalary}</div>
+          <div className="disp mono" style={{ fontSize: 18, fontWeight: 700, color: "#F2A93B", marginTop: 6 }}>{inr(totalUnpaidSalary)}</div>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gap: 10 }}>
+        {monthRows.map((item, index) => {
+          const paid = Boolean(settings.salaryPaidMonths?.[item.monthKey]);
+          return (
+            <div key={`${item.month}-${index}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "13px 14px" }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--ink)" }}>{item.month}</div>
+                <div style={{ fontSize: 11.5, color: "var(--ink-dim)", marginTop: 3 }}>
+                  {ui.present} {item.present || 0} • {ui.halfDay} {item.half || 0} • {ui.leave} {item.leave || 0}
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <div style={{ textAlign: "right" }}>
+                  <div className="disp mono" style={{ fontSize: 15.5, fontWeight: 700, color: "#4ED9C5" }}>{inr(item.salary)}</div>
+                  <div style={{ fontSize: 11.5, color: "#F2677A", marginTop: 2 }}>Ded {inr(item.deduction)}</div>
+                </div>
+                <div style={{ display: "flex", gap: 7 }}>
+                  <button className="punch-btn" onClick={() => togglePaid(item.monthKey, true)} style={{ padding: "7px 10px", borderRadius: 8, border: `1px solid ${paid ? "#4ED9C5" : "var(--border)"}`, background: paid ? "#4ED9C522" : "var(--surface)", color: paid ? "#4ED9C5" : "var(--ink-dim)", cursor: "pointer", fontWeight: 600, fontSize: 12 }}>
+                    {ui.paid}
+                  </button>
+                  <button className="punch-btn" onClick={() => togglePaid(item.monthKey, false)} style={{ padding: "7px 10px", borderRadius: 8, border: `1px solid ${!paid ? "#F2A93B" : "var(--border)"}`, background: !paid ? "#F2A93B22" : "var(--surface)", color: !paid ? "#F2A93B" : "var(--ink-dim)", cursor: "pointer", fontWeight: 600, fontSize: 12 }}>
+                    {ui.unpaid}
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -468,7 +732,7 @@ function AttendancePage({
             <button className="punch-btn" onClick={() => shiftMonth(1)} style={navBtnStyle}><ChevronRight size={16} /></button>
           </div>
           <div className="mono" style={{ fontSize: 11.5, color: "var(--ink-dim)" }}>
-            Working Days: <span style={{ color: "var(--ink)" }}>{summary && Object.values(summary.counts).length ? null : null}</span>
+            {getUiText(settings.language, "workingDays")}: <span style={{ color: "var(--ink)" }}>{summary && Object.values(summary.counts).length ? null : null}</span>
           </div>
         </div>
 
@@ -482,12 +746,7 @@ function AttendancePage({
             if (!d) return <div key={i} />;
             const k = keyOf(viewYear, viewMonth, d);
             const rec = records[k];
-            const dow = new Date(viewYear, viewMonth, d).getDay();
-            let status = rec?.status;
-            if (!status) {
-              if (dow === 0) status = "sunday";
-              else if (dow === 6 && !settings.saturdayWorking) status = "sunday";
-            }
+            const status = getDefaultStatus(viewYear, viewMonth, d, rec, settings);
             const meta = status ? STATUS[status] : null;
             const isToday = new Date().toDateString() === new Date(viewYear, viewMonth, d).toDateString();
             const isSelected = selectedDay === d;
@@ -515,7 +774,7 @@ function AttendancePage({
           {STATUS_ORDER.map((s) => (
             <div key={s} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "var(--ink-dim)" }}>
               <span style={{ width: 9, height: 9, borderRadius: "50%", background: STATUS[s].color, display: "inline-block" }} />
-              {STATUS[s].label}
+              {getStatusLabel(s, settings.language)}
             </div>
           ))}
         </div>
@@ -527,6 +786,7 @@ function AttendancePage({
           onChange={(patch) => updateDay(selKey, patch)}
           onClose={() => setSelectedDay(null)}
           dailySalary={dailySalary} halfDaySalary={halfDaySalary}
+          settings={settings}
         />
       )}
     </div>
@@ -538,9 +798,10 @@ const navBtnStyle = {
   color: "var(--ink)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
 };
 
-function DayPanel({ day, month, year, rec, onChange, onClose, dailySalary, halfDaySalary }) {
+function DayPanel({ day, month, year, rec, onChange, onClose, dailySalary, halfDaySalary, settings }) {
   const dateStr = `${MONTHS[month]} ${day}, ${year}`;
-  const status = rec?.status || "";
+  const status = getDefaultStatus(year, month, day, rec, settings);
+  const isSunday = new Date(year, month, day).getDay() === 0;
   return (
     <div className="fade-in" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 18, height: "fit-content" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
@@ -548,51 +809,80 @@ function DayPanel({ day, month, year, rec, onChange, onClose, dailySalary, halfD
         <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--ink-dim)", cursor: "pointer" }}><X size={17} /></button>
       </div>
 
-      <FieldLabel>Status</FieldLabel>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 14 }}>
-        {STATUS_ORDER.map((s) => (
+      <FieldLabel>{getUiText(settings.language, "status")}</FieldLabel>
+      {isSunday ? (
+        <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
           <button
-            key={s}
             className="punch-btn"
-            onClick={() => onChange({ status: s })}
+            onClick={() => onChange({ status: "sunday" })}
             style={{
-              fontSize: 11.5, padding: "7px 6px", borderRadius: 8, cursor: "pointer", fontWeight: 600,
-              border: `1px solid ${status === s ? STATUS[s].color : "var(--border)"}`,
-              background: status === s ? STATUS[s].color + "22" : "var(--surface-2)",
-              color: status === s ? STATUS[s].color : "var(--ink-dim)",
+              fontSize: 12, padding: "8px 10px", borderRadius: 8, cursor: "pointer", fontWeight: 600,
+              border: `1px solid ${status === "sunday" ? STATUS.sunday.color : "var(--border)"}`,
+              background: status === "sunday" ? STATUS.sunday.color + "22" : "var(--surface-2)",
+              color: status === "sunday" ? STATUS.sunday.color : "var(--ink-dim)",
             }}
           >
-            {STATUS[s].label}
+            {getUiText(settings.language, "offSunday")}
           </button>
-        ))}
-      </div>
+          <button
+            className="punch-btn"
+            onClick={() => onChange({ status: "leave" })}
+            style={{
+              fontSize: 12, padding: "8px 10px", borderRadius: 8, cursor: "pointer", fontWeight: 600,
+              border: `1px solid ${status === "leave" ? STATUS.leave.color : "var(--border)"}`,
+              background: status === "leave" ? STATUS.leave.color + "22" : "var(--surface-2)",
+              color: status === "leave" ? STATUS.leave.color : "var(--ink-dim)",
+            }}
+          >
+            {getUiText(settings.language, "leave")}
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 14 }}>
+          {STATUS_ORDER.map((s) => (
+            <button
+              key={s}
+              className="punch-btn"
+              onClick={() => onChange({ status: s })}
+              style={{
+                fontSize: 11.5, padding: "7px 6px", borderRadius: 8, cursor: "pointer", fontWeight: 600,
+                border: `1px solid ${status === s ? STATUS[s].color : "var(--border)"}`,
+                background: status === s ? STATUS[s].color + "22" : "var(--surface-2)",
+                color: status === s ? STATUS[s].color : "var(--ink-dim)",
+              }}
+            >
+              {getStatusLabel(s, settings.language)}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
         <div>
-          <FieldLabel>Check-in</FieldLabel>
+          <FieldLabel>{getUiText(settings.language, "checkIn")}</FieldLabel>
           <input type="time" value={rec?.checkIn || ""} onChange={(e) => onChange({ checkIn: e.target.value })} style={inputStyle} />
         </div>
         <div>
-          <FieldLabel>Check-out</FieldLabel>
+          <FieldLabel>{getUiText(settings.language, "checkOut")}</FieldLabel>
           <input type="time" value={rec?.checkOut || ""} onChange={(e) => onChange({ checkOut: e.target.value })} style={inputStyle} />
         </div>
       </div>
 
-      <FieldLabel>Overtime Hours</FieldLabel>
+      <FieldLabel>{getUiText(settings.language, "overtimeHours")}</FieldLabel>
       <input
         type="number" min="0" step="0.5" placeholder="0"
         value={rec?.overtimeHours || ""} onChange={(e) => onChange({ overtimeHours: e.target.value })}
         style={{ ...inputStyle, marginBottom: 12 }}
       />
 
-      <FieldLabel>Reason</FieldLabel>
+      <FieldLabel>{getUiText(settings.language, "reason")}</FieldLabel>
       <input
         type="text" placeholder="e.g. Fever, family event"
         value={rec?.reason || ""} onChange={(e) => onChange({ reason: e.target.value })}
         style={{ ...inputStyle, marginBottom: 12 }}
       />
 
-      <FieldLabel>Remarks</FieldLabel>
+      <FieldLabel>{getUiText(settings.language, "remarks")}</FieldLabel>
       <textarea
         placeholder="Any additional notes"
         value={rec?.remarks || ""} onChange={(e) => onChange({ remarks: e.target.value })}
@@ -601,7 +891,7 @@ function DayPanel({ day, month, year, rec, onChange, onClose, dailySalary, halfD
 
       {(status === "half" || status === "leave" || status === "unpaid") && (
         <div className="mono" style={{ fontSize: 11.5, color: "#F2677A", background: "#F2677A18", padding: "8px 10px", borderRadius: 8 }}>
-          Deduction: -{inr(status === "half" ? halfDaySalary : dailySalary)}
+          {getUiText(settings.language, "deductionLabel")}: -{inr(status === "half" ? halfDaySalary : dailySalary)}
         </div>
       )}
     </div>
@@ -621,6 +911,7 @@ const inputStyle = {
    SETTINGS PAGE
 ---------------------------------------------------------------- */
 function SettingsPage({ settings, setSettings, setRecords }) {
+  const ui = settings.language === "hi" ? UI_TEXT.hi : UI_TEXT.en;
   const set = (patch) => setSettings((prev) => ({ ...prev, ...patch }));
 
   const handleReset = () => {
@@ -633,30 +924,37 @@ function SettingsPage({ settings, setSettings, setRecords }) {
 
   return (
     <div className="fade-in grid-settings">
-      <SettingsCard title="Salary">
-        <FieldLabel>Fixed Monthly Salary (₹)</FieldLabel>
+      <SettingsCard title={ui.appNameTitle}>
+        <FieldLabel>{ui.websiteName}</FieldLabel>
+        <input type="text" value={settings.appName || ""} onChange={(e) => set({ appName: e.target.value })} placeholder="PUNCH." style={{ ...inputStyle, marginBottom: 14 }} />
+        <div style={{ fontSize: 11.5, color: "var(--ink-dim)" }}>{ui.appNameNote}</div>
+      </SettingsCard>
+
+      <SettingsCard title={ui.salaryTitle}>
+        <FieldLabel>{ui.fixedMonthlySalary}</FieldLabel>
         <input type="number" value={settings.monthlySalary} onChange={(e) => set({ monthlySalary: Number(e.target.value) })} style={{ ...inputStyle, marginBottom: 14 }} />
-        <FieldLabel>Salary Calculation Method</FieldLabel>
+        <FieldLabel>{ui.salaryCalculationMethod}</FieldLabel>
         <select value={settings.calcMethod} onChange={(e) => set({ calcMethod: e.target.value })} style={inputStyle}>
-          <option value="calendar">Actual working days in month</option>
-          <option value="fixed30">Fixed 30-day month</option>
+          <option value="calendar">{ui.actualWorkingDays}</option>
+          <option value="fixed30">{ui.fixed30Days}</option>
         </select>
       </SettingsCard>
 
-      <SettingsCard title="Working Schedule">
-        <ToggleRow label="Saturdays are working days" checked={settings.saturdayWorking} onChange={(v) => set({ saturdayWorking: v, workingDaysPerWeek: v ? 6 : 5 })} />
-        <FieldLabel>Working Hours per Day</FieldLabel>
+      <SettingsCard title={ui.workingSchedule}>
+        <ToggleRow label={ui.saturdaysWorking} checked={settings.saturdayWorking} onChange={(v) => set({ saturdayWorking: v, workingDaysPerWeek: v ? 6 : 5 })} />
+        <ToggleRow label={ui.hindiToggleLabel} checked={settings.language === "hi"} onChange={(v) => set({ language: v ? "hi" : "en" })} />
+        <FieldLabel>{ui.workingHoursPerDay}</FieldLabel>
         <input type="number" min="1" max="24" value={settings.workingHoursPerDay} onChange={(e) => set({ workingHoursPerDay: Number(e.target.value) })} style={inputStyle} />
       </SettingsCard>
 
-      <SettingsCard title="Half Day Rule">
-        <FieldLabel>Half Day Deduction (%) — currently {settings.halfDayPercent}%</FieldLabel>
+      <SettingsCard title={ui.halfDayRule}>
+        <FieldLabel>{ui.halfDayDeduction.replace("%", `${settings.halfDayPercent}%`)}</FieldLabel>
         <input type="range" min="10" max="100" step="5" value={settings.halfDayPercent} onChange={(e) => set({ halfDayPercent: Number(e.target.value) })} style={{ width: "100%" }} />
-        <div style={{ fontSize: 11.5, color: "var(--ink-dim)", marginTop: 6 }}>Default is 50% of daily salary.</div>
+        <div style={{ fontSize: 11.5, color: "var(--ink-dim)", marginTop: 6 }}>{ui.defaultHalfDay}</div>
       </SettingsCard>
 
-      <SettingsCard title="Overtime Rate">
-        <FieldLabel>Overtime Multiplier</FieldLabel>
+      <SettingsCard title={ui.overtimeRate}>
+        <FieldLabel>{ui.overtimeMultiplier}</FieldLabel>
         <div style={{ display: "flex", gap: 8 }}>
           {[1, 1.5, 2].map((m) => (
             <button key={m} className="punch-btn" onClick={() => set({ overtimeMultiplier: m })}
@@ -672,11 +970,9 @@ function SettingsPage({ settings, setSettings, setRecords }) {
         </div>
       </SettingsCard>
 
-      <SettingsCard title="Data & Storage">
+      <SettingsCard title={ui.dataStorage}>
         <div style={{ fontSize: 12.5, color: "var(--ink-dim)", lineHeight: 1.5, marginBottom: 14 }}>
-          Attendance records and settings are saved to this browser's local storage,
-          so they'll still be here next time you open the app on this device.
-          They aren't synced anywhere else.
+          {ui.storageText}
         </div>
         <button
           className="punch-btn"
@@ -686,7 +982,7 @@ function SettingsPage({ settings, setSettings, setRecords }) {
             border: "1px solid #F2677A55", background: "#F2677A18", color: "#F2677A",
           }}
         >
-          Reset all attendance data
+          {ui.resetAllData}
         </button>
       </SettingsCard>
     </div>
