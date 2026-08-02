@@ -224,6 +224,11 @@ function GlobalStyle() {
       .punch-root * { box-sizing: border-box; }
       .disp { font-family: 'Space Grotesk', sans-serif; }
       .mono { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+      .punch-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; }
+      .punch-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .punch-brand-meta { min-width: 0; }
+      .punch-header-nav { display: flex; gap: 6px; background: var(--surface); padding: 5px; border-radius: 12px; border: 1px solid var(--border); flex-wrap: wrap; }
+      .punch-tab-btn { justify-content: center; }
       .punch-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
       .punch-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
       .punch-btn { transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
@@ -257,9 +262,18 @@ function GlobalStyle() {
       @media (max-width: 860px) {
         .grid-dash-main, .grid-dash-sec, .grid-settings { grid-template-columns: 1fr; }
         .grid-attendance.has-panel { grid-template-columns: 1fr; }
+        .punch-header { align-items: flex-start; }
+        .punch-header-nav { width: 100%; }
+        .punch-tab-btn { flex: 1 1 calc(50% - 6px); }
+        .led-readout { flex-direction: column; align-items: flex-start; }
       }
       @media (max-width: 520px) {
         .punch-root { font-size: 14px; }
+        .punch-header { margin-bottom: 20px; }
+        .punch-header-nav { gap: 4px; padding: 4px; }
+        .punch-tab-btn { flex: 1 1 100%; padding: 10px 12px; }
+        .punch-brand .disp { font-size: 17px; }
+        .punch-brand .mono { font-size: 9.5px; }
       }
     `}</style>
   );
@@ -277,7 +291,7 @@ export default function PunchSalaryApp() {
   const [selectedDay, setSelectedDay] = useState(null);
 
   const [settings, setSettings] = useState(() => loadFromStorage(LS_SETTINGS_KEY, {
-    appName: "Shinu",
+    appName: "SHINU.",
     monthlySalary: 5000,
     workingDaysPerWeek: 6,
     saturdayWorking: true,
@@ -316,7 +330,7 @@ export default function PunchSalaryApp() {
     return count;
   }, [viewYear, viewMonth, settings.calcMethod, isWorkingDay]);
 
-  const dailySalary = settings.monthlySalary / (totalWorkingDays || 1);
+  const dailySalary = settings.monthlySalary / 30;
   const hourlySalary = dailySalary / (settings.workingHoursPerDay || 8);
   const halfDaySalary = dailySalary * (settings.halfDayPercent / 100);
 
@@ -362,9 +376,7 @@ export default function PunchSalaryApp() {
       const [y, m] = mk.split("-").map(Number);
       const dim = daysInMonth(y, m - 1);
       let present = 0, half = 0, leave = 0, unpaid = 0, paidL = 0, ot = 0, ded = 0, otBonus = 0;
-      let wd = 0;
-      for (let d = 1; d <= dim; d++) if (isWorkingDay(y, m - 1, d)) wd++;
-      const dSal = settings.monthlySalary / (wd || 1);
+      const dSal = settings.monthlySalary / 30;
       const hSal = dSal / (settings.workingHoursPerDay || 8);
       for (let d = 1; d <= dim; d++) {
         const rec = records[keyOf(y, m - 1, d)];
@@ -438,25 +450,25 @@ function Header({ tab, setTab, appName, language }) {
     { id: "settings", label: ui.settings, icon: SettingsIcon },
   ];
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <div className="punch-header">
+      <div className="punch-brand">
         <div style={{
           width: 40, height: 40, borderRadius: 10, background: "linear-gradient(135deg,#4ED9C5,#7FD1E8)",
-          display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(78,217,197,.35)",
+          display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(78,217,197,.35)", flexShrink: 0,
         }}>
           <Clock size={20} color="#10131A" strokeWidth={2.5} />
         </div>
-        <div>
+        <div className="punch-brand-meta">
           <div className="disp" style={{ fontSize: 19, fontWeight: 700, letterSpacing: .3 }}>{appName}</div>
           <div className="mono" style={{ fontSize: 10.5, color: "var(--ink-dim)", letterSpacing: 1.5 }}>{ui.appSubtitle}</div>
         </div>
       </div>
-      <div style={{ display: "flex", gap: 6, background: "var(--surface)", padding: 5, borderRadius: 12, border: "1px solid var(--border)" }}>
+      <div className="punch-header-nav">
         {tabs.map((t) => {
           const Icon = t.icon;
           const active = tab === t.id;
           return (
-            <button key={t.id} className="punch-btn" onClick={() => setTab(t.id)} style={{
+            <button key={t.id} className="punch-btn punch-tab-btn" onClick={() => setTab(t.id)} style={{
               display: "flex", alignItems: "center", gap: 7, padding: "9px 16px", borderRadius: 8, border: "none",
               cursor: "pointer", fontSize: 13.5, fontWeight: 600, fontFamily: "'Inter',sans-serif",
               background: active ? "var(--teal)" : "transparent", color: active ? "#0B0E13" : "var(--ink-dim)",
