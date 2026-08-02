@@ -332,7 +332,7 @@ export default function PunchSalaryApp() {
 
   const dailySalary = settings.monthlySalary / 30;
   const hourlySalary = dailySalary / (settings.workingHoursPerDay || 8);
-  const halfDaySalary = dailySalary * (settings.halfDayPercent / 100);
+  const halfDaySalary = dailySalary / 2;
 
   /* ---------- month summary ---------- */
   const summary = useMemo(() => {
